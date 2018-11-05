@@ -29,18 +29,20 @@ import butterknife.ButterKnife;
 
 import static com.example.android.miriamsbaking.activity.MainActivity.RECIPE_EXTRA;
 
-public class RecipeActivity extends AppCompatActivity implements StepAdapter.StepListener{
+public class RecipeActivity extends AppCompatActivity implements StepAdapter.StepListener, StepFragment.StepFragListener{
 
     public static final String STEP_INDEX_EXTRA = "step id";
     public static final String STEPS_EXTRA = "";
     private boolean mTabletMode;
     private List<Step> mRecipeSteps;
     private StepAdapter mStepAdapter;
+    private int mStepIndex;
 
     @BindView(R.id.tv_ingredients)
     TextView mTvIngredients;
     @BindView(R.id.rv_steps)
     RecyclerView mRvSteps;
+
 
 
     @Override
@@ -73,16 +75,11 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
             // Get the recipeId from the recipe and use to query database and obtain the ingredients and steps
             setUpIngredients(recipe.getId());
             setUpSteps(recipe.getId());
+
+
         }
 
-        if(mTabletMode){
-            StepFragment fragment = new StepFragment();
-            fragment.setStepIndex(0);
-            fragment.setSteps(mRecipeSteps.toArray(new Step[0]));
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.step_container,fragment)
-                    .commit();
-        }
+
 
 
 
@@ -98,7 +95,15 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
             public void onChanged(@Nullable List<Step> steps) {
                 mRecipeSteps = steps ;
                 mStepAdapter.setSteps(steps);
-                Log.d("Size",String.valueOf(steps.size()));
+
+                if(mTabletMode){
+                    StepFragment fragment = new StepFragment();
+                    fragment.setStepIndex(0);
+                    fragment.setSteps(mRecipeSteps.toArray(new Step[0]));
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.step_container,fragment)
+                            .commit();
+                }
             }
         });
     }
@@ -126,14 +131,8 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
     @Override
     public void onStepClicked(int stepIndex) {
         if (mTabletMode){
-            //
-            StepFragment fragment = new StepFragment();
-            fragment.setStepIndex(stepIndex);
-            fragment.setSteps(mRecipeSteps.toArray(new Step[0]));
-            // TODO consider updating the stepIndex of the fragment and updating just the appropriate view
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.step_container,fragment)
-                    .commit();
+            mStepIndex = stepIndex;
+            updateStepFragment();
             
         }else{
             Intent stepIntent = new Intent(RecipeActivity.this,StepActivity.class);
@@ -143,5 +142,32 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
 
             startActivity(stepIntent);
         }
+    }
+
+    @Override
+    public void onNextBtnClicked() {
+        mStepIndex += 1;
+        mStepIndex %= mRecipeSteps.size();
+        updateStepFragment();
+    }
+
+    @Override
+    public void onPrevBtnClicked() {
+        mStepIndex -= 1;
+        if(mStepIndex < 0){
+            mStepIndex = mRecipeSteps.size() -1;
+        }
+        updateStepFragment();
+
+    }
+
+    public void updateStepFragment(){
+        StepFragment fragment = new StepFragment();
+        fragment.setStepIndex(mStepIndex);
+        fragment.setSteps(mRecipeSteps.toArray(new Step[0]));
+        // TODO consider updating the stepIndex of the fragment and updating just the appropriate view
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.step_container,fragment)
+                .commit();
     }
 }
