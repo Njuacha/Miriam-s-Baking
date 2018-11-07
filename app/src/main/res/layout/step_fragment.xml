@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"/>
-    <com.google.android.exoplayer2.ui.PlayerView
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/simple_exo_player_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
