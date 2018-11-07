@@ -11,6 +11,8 @@ import android.widget.Button;
 import com.example.android.miriamsbaking.R;
 import com.example.android.miriamsbaking.fragment.StepFragment;
 import com.example.android.miriamsbaking.model.Step;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import java.util.List;
 
@@ -30,7 +32,6 @@ public class StepActivity extends AppCompatActivity implements StepFragment.Step
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
-
 
         StepFragment stepFragment = new StepFragment();
 

@@ -21,6 +21,7 @@ import com.example.android.miriamsbaking.view_model.IngredientViewModel;
 import com.example.android.miriamsbaking.view_model.IngredientViewModelFactory;
 import com.example.android.miriamsbaking.view_model.StepViewModel;
 import com.example.android.miriamsbaking.view_model.StepViewModelFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import java.util.List;
 
@@ -37,11 +38,14 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
     private List<Step> mRecipeSteps;
     private StepAdapter mStepAdapter;
     private int mStepIndex;
+    private SimpleExoPlayer mExoPlayer;
 
     @BindView(R.id.tv_ingredients)
     TextView mTvIngredients;
     @BindView(R.id.rv_steps)
     RecyclerView mRvSteps;
+
+
 
 
 
