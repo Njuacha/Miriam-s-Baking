@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.android.miriamsbaking.R;
+import com.example.android.miriamsbaking.RecipeUtil;
 import com.example.android.miriamsbaking.adapter.StepAdapter;
 import com.example.android.miriamsbaking.database.AppDatabase;
 import com.example.android.miriamsbaking.fragment.StepFragment;
@@ -38,7 +39,6 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
     private List<Step> mRecipeSteps;
     private StepAdapter mStepAdapter;
     private int mStepIndex;
-    private SimpleExoPlayer mExoPlayer;
 
     @BindView(R.id.tv_ingredients)
     TextView mTvIngredients;
@@ -80,6 +80,12 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
             setUpIngredients(recipe.getId());
             setUpSteps(recipe.getId());
 
+            if(savedInstanceState != null){
+                mStepIndex = savedInstanceState.getInt(STEP_INDEX_EXTRA);
+            }else{
+                mStepIndex = 0;
+            }
+
 
         }
 
@@ -102,7 +108,7 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
 
                 if(mTabletMode){
                     StepFragment fragment = new StepFragment();
-                    fragment.setStepIndex(0);
+                    fragment.setStepIndex(mStepIndex);
                     fragment.setSteps(mRecipeSteps.toArray(new Step[0]));
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.step_container,fragment)
@@ -119,17 +125,17 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
         viewModel.getIngredients().observe(this, new Observer<List<Ingredient>>() {
             @Override
             public void onChanged(@Nullable List<Ingredient> ingredients) {
-                StringBuilder allIngredients = new StringBuilder();
-                String anIngredient;
-                for(Ingredient ingredient: ingredients){
-                    anIngredient = String.format("%.1f %s %s%n",ingredient.getQuantity()
-                            ,ingredient.getMeasure(),ingredient.getIngredient());
-                    allIngredients.append(anIngredient);
-                }
 
-                mTvIngredients.setText(allIngredients);
+                mTvIngredients.setText(RecipeUtil.assembleIngredients(ingredients));
+
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STEP_INDEX_EXTRA,mStepIndex);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

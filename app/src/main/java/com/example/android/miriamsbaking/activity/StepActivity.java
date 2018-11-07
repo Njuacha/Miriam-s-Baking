@@ -37,19 +37,27 @@ public class StepActivity extends AppCompatActivity implements StepFragment.Step
 
         Intent intent = getIntent();
 
+
+
         if (intent.hasExtra(STEP_INDEX_EXTRA)) {
 
-            mStepIndex = intent.getIntExtra(STEP_INDEX_EXTRA, 0);
+
             mSteps = intent.getParcelableArrayExtra(STEPS_EXTRA);
             mNumberOfSteps = mSteps.length;
 
-            Log.d("Steps", String.valueOf(mSteps.length));
+            if (savedInstanceState != null){
+                mStepIndex = savedInstanceState.getInt(STEP_INDEX_EXTRA);
+            }else{
+                mStepIndex = intent.getIntExtra(STEP_INDEX_EXTRA, 0);
+            }
+
             stepFragment.setStepIndex(mStepIndex);
             stepFragment.setSteps(mSteps);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.step_container, stepFragment)
                     .commit();
+
         } else return;
 
 
@@ -70,6 +78,12 @@ public class StepActivity extends AppCompatActivity implements StepFragment.Step
             mStepIndex = mNumberOfSteps - 1;
         }
         updateFragment();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(STEP_INDEX_EXTRA,mStepIndex);
+        super.onSaveInstanceState(outState);
     }
 
     public void updateFragment() {

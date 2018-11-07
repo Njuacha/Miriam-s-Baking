@@ -15,4 +15,7 @@ public interface RecipeDao {
 
     @Query("Select * from Recipe ")
     List<Recipe> getRecipe();
+
+    @Query("Select * from Recipe where id=:id ")
+    Recipe getRecipe(int id);
 }

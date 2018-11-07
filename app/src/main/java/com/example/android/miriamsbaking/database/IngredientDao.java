@@ -16,4 +16,7 @@ public interface IngredientDao {
 
     @Query("Select quantity,measure,ingredient from IngredientWithId where recipeId = :recipeId")
     LiveData<List<Ingredient>> getIngredientWithRecipeId(int recipeId);
+
+    @Query("Select quantity,measure,ingredient from IngredientWithId where recipeId = :recipeId")
+    List<Ingredient> getIngredientWithRecipeIdNotLiveData(int recipeId);
 }

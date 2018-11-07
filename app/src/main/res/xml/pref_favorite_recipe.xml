@@ -1,0 +1,5 @@
+
+ <Preference xmlns:android="http://schemas.android.com/apk/res/android"
+     android:defaultValue="@integer/default_favorite_id"
+     android:key="@string/favorite_key"
+     />

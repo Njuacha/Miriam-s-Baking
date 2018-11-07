@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.miriamsbaking.R;
@@ -56,16 +57,25 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     public interface RecipeClickListener{
         void onRecipeClicked(Recipe recipe);
+        void onRecipeOptionTouched(int recipeId,View view);
     }
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.tv_recipe)
         TextView tvRecipeName;
+        @BindView(R.id.iv_option)
+        ImageView ivOptions;
 
         public RecipeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
+            ivOptions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onRecipeOptionTouched(recipes.get(getAdapterPosition()).getId(),v);
+                }
+            });
         }
 
         @Override

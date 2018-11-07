@@ -5,13 +5,19 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.android.miriamsbaking.AppWidget;
 import com.example.android.miriamsbaking.R;
+import com.example.android.miriamsbaking.RecipeUtil;
+import com.example.android.miriamsbaking.UpdateWidgetService;
 import com.example.android.miriamsbaking.adapter.RecipeAdapter;
 import com.example.android.miriamsbaking.database.AppDatabase;
 import com.example.android.miriamsbaking.database.IngredientWithId;
@@ -51,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
         mDb = AppDatabase.getDatabaseInstance(this);
         mAdapter = new RecipeAdapter(this,this);
+
+        rvRecipe.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         
         if (getScreenSize() == Configuration.SCREENLAYOUT_SIZE_LARGE){
             rvRecipe.setLayoutManager(new GridLayoutManager(this,3));
@@ -162,5 +170,27 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         startActivity(new Intent(MainActivity.this,RecipeActivity.class)
                 .putExtra(RECIPE_EXTRA,recipe));
     }
+
+    @Override
+    public void onRecipeOptionTouched(final int recipeId, View v) {
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.inflate(R.menu.recipe_options);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if( id == R.id.action_set_as_favorite){
+                    // Change the favorite preference to hold this recipeId
+                    RecipeUtil.setRecipeAsPrefferedToDisplay(getApplicationContext(),recipeId);
+                    // Start background service to update the widget
+                    UpdateWidgetService.startActionUpdateWidget(getApplicationContext());
+                }
+                return false;
+            }
+        });
+
+        popupMenu.show();
+    }
+
 }
 

@@ -86,7 +86,7 @@ public class StepFragment extends Fragment {
            Step step = (Step)mSteps[mStepIndex];
            String description = step.getDescription();
 
-           if(description!= null){
+           if(description != null){
                TextView tvTextDescription = rootView.findViewById(R.id.tv_step_description);
                tvTextDescription.setText(description);
            }
