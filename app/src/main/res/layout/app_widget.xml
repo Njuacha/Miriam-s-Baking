@@ -7,14 +7,16 @@
         android:id="@+id/tv_recipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:layout_margin="8dp"
         android:contentDescription="@string/name_of_recipe"
         android:textColor="#ffffff"
         android:textSize="24sp"
         android:textStyle="bold|italic" />
     <TextView
+        android:id="@+id/tv_ingredients"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_below="@+id/tv_recipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

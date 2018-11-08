@@ -47,8 +47,6 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
 
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,11 +69,10 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
 
             Recipe recipe = intent.getParcelableExtra(RECIPE_EXTRA);
             String name = recipe.getName();
-            if( name == null){
+            if( name != null){
                 // Set the name of the Recipe as title of Action bar
                 setTitle(name);
             }
-
             // Get the recipeId from the recipe and use to query database and obtain the ingredients and steps
             setUpIngredients(recipe.getId());
             setUpSteps(recipe.getId());
@@ -86,13 +83,7 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
                 mStepIndex = 0;
             }
 
-
         }
-
-
-
-
-
 
     }
 

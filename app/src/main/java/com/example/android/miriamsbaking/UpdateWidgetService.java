@@ -38,28 +38,16 @@ public class UpdateWidgetService extends IntentService{
     }
 
     private void carryOnWidgetUpdate() {
-        AppDatabase db= AppDatabase.getDatabaseInstance(this);
         // Get the recipeId from the sharepreferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int recipeId = sharedPreferences.getInt(getString(R.string.favorite_key)
                 ,getResources().getInteger(R.integer.default_favorite_id));
 
-        // Use the recipeId to get the recipeName and Ingredients
-        String recipeName;
-        Recipe recipe = db.recipeDao().getRecipe(recipeId);
-        recipeName = (recipe == null)?getString(R.string.default_recipe_name):recipe.getName() ;
-
-        // Use the recipeId to get the Ingredients
-        String ingredients;
-        List<Ingredient> ingredientList = db.ingredientDao().getIngredientWithRecipeIdNotLiveData(recipeId);
-        ingredients = RecipeUtil.assembleIngredients(ingredientList);
-        ingredients = (ingredients == null)?"List Of ingredients":ingredients;
 
         AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
         int[] widgetIds = widgetManager.getAppWidgetIds(new ComponentName(  this,AppWidget.class));
         // Finally update all widgets
-        AppWidget.updateWidgets(this,widgetManager,widgetIds,recipeName,ingredients);
-
+        AppWidget.updateWidgets(this,widgetManager,widgetIds,RecipeUtil.getRecipe(this,recipeId));
 
     }
 
