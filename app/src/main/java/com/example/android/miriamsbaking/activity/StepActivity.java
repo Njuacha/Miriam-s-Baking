@@ -3,25 +3,14 @@ package com.example.android.miriamsbaking.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.android.miriamsbaking.R;
 import com.example.android.miriamsbaking.fragment.StepFragment;
-import com.example.android.miriamsbaking.model.Step;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-import static android.view.View.GONE;
+import static com.example.android.miriamsbaking.activity.RecipeActivity.RECIPE_NAME_EXTRA;
 import static com.example.android.miriamsbaking.activity.RecipeActivity.STEPS_EXTRA;
 import static com.example.android.miriamsbaking.activity.RecipeActivity.STEP_INDEX_EXTRA;
 
@@ -36,6 +25,11 @@ public class StepActivity extends AppCompatActivity implements StepFragment.Step
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
+
+        ActionBar actionBar = this.getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         StepFragment stepFragment = new StepFragment();
 
@@ -54,6 +48,8 @@ public class StepActivity extends AppCompatActivity implements StepFragment.Step
                 mStepIndex = intent.getIntExtra(STEP_INDEX_EXTRA, 0);
             }
 
+            // Set title to Name of Recipe so you are also reminded
+            setTitle(intent.getStringExtra(RECIPE_NAME_EXTRA) + " Steps");
 
             stepFragment.setStepIndex(mStepIndex);
             stepFragment.setSteps(mSteps);
@@ -67,7 +63,8 @@ public class StepActivity extends AppCompatActivity implements StepFragment.Step
                     .replace(R.id.step_container, stepFragment)
                     .commit();
 
-        } else return;
+
+        }
 
 
     }

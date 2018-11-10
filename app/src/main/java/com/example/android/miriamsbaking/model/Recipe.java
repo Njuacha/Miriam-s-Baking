@@ -16,17 +16,21 @@ public class Recipe implements Parcelable{
     @PrimaryKey
     @SerializedName("id")
     @Expose
+    private final
     int id;
     @SerializedName("name")
     @Expose
+    private final
     String name;
     @Ignore
     @SerializedName("ingredients")
     @Expose
+    private
     List<Ingredient> ingredients;
     @Ignore
     @SerializedName("steps")
     @Expose
+    private
     List<Step> steps;
 
 

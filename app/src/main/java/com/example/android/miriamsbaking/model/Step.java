@@ -7,14 +7,19 @@ import com.google.gson.annotations.SerializedName;
 
 public class Step implements Parcelable {
     @SerializedName("id")
+    private final
     int id;
     @SerializedName("shortDescription")
+    private final
     String shortDescription;
     @SerializedName("description")
+    private final
     String description;
     @SerializedName("videoURL")
+    private final
     String videoURL;
     @SerializedName("thumbnailURL")
+    private final
     String thumbnailURL;
 
     public Step(int id, String shortDescription, String description, String videoURL, String thumbnailURL) {
@@ -25,7 +30,7 @@ public class Step implements Parcelable {
         this.thumbnailURL = thumbnailURL;
     }
 
-    protected Step(Parcel in) {
+    private Step(Parcel in) {
         id = in.readInt();
         shortDescription = in.readString();
         description = in.readString();

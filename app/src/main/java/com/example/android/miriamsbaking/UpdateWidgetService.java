@@ -9,16 +9,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
-import com.example.android.miriamsbaking.database.AppDatabase;
-import com.example.android.miriamsbaking.model.Ingredient;
-import com.example.android.miriamsbaking.model.Recipe;
-
-import java.util.List;
-
 public class UpdateWidgetService extends IntentService{
 
 
-    private static String ACTION_UPDATE_WIDGETS= "update widgets";
+    private static final String ACTION_UPDATE_WIDGETS= "update widgets";
 
     public UpdateWidgetService() {
         super("UpdateWidgetService");

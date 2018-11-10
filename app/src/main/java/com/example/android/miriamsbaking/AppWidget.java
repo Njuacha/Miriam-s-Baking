@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.android.miriamsbaking.activity.MainActivity;
@@ -19,8 +18,8 @@ import static com.example.android.miriamsbaking.activity.MainActivity.RECIPE_EXT
  */
 public class AppWidget extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, Recipe recipe) {
+    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                        int appWidgetId, Recipe recipe) {
 
         String recipeName = (recipe == null)?context.getString(R.string.default_recipe_name)
                 :recipe.getName() ;

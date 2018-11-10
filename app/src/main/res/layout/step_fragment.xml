@@ -13,7 +13,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:textSize="16sp"
         android:textColor="@android:color/black"
-        android:padding="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         tools:text="The Introduction"/>
     <Button
         android:id="@+id/btn_next"
@@ -33,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="16dp"
         app:layout_constraintTop_toBottomOf="@+id/btn_next"
-        app:layout_constraintBottom_toTopOf="@+id/simple_exo_player_view"
+        app:layout_constraintBottom_toTopOf="@+id/holder_image_or_video"
         />
     <android.support.constraint.Guideline
         android:id="@+id/guide_line"
@@ -41,26 +42,29 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"/>
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/simple_exo_player_view"
+    <FrameLayout
+        android:id="@+id/holder_image_or_video"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/view_small_padding"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/tv_step_description" />
-    <TextView
-        android:id="@+id/tv_no_vidoe_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/titleStyle"
-        android:textSize="21sp"
-        android:visibility="invisible"
-        android:text="@string/no_video_available"
-        app:layout_constraintTop_toBottomOf="@id/btn_next"
-        app:layout_constraintBottom_toTopOf="@id/tv_step_description"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/tv_step_description">
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/simple_exo_player_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+             />
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:src="@mipmap/ic_launcher"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            />
+    </FrameLayout>
+
 
 </android.support.constraint.ConstraintLayout>

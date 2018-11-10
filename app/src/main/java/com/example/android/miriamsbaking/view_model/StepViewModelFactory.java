@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 import com.example.android.miriamsbaking.database.AppDatabase;
 
 public class StepViewModelFactory extends ViewModelProvider.NewInstanceFactory {
-    private int recipeId;
-    private AppDatabase db;
+    private final int recipeId;
+    private final AppDatabase db;
 
     public StepViewModelFactory(int recipeId, AppDatabase db){
         this.recipeId = recipeId;

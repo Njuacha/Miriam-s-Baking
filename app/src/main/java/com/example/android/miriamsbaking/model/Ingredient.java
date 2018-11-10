@@ -4,10 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class Ingredient {
     @SerializedName("quantity")
+    private final
     float quantity;
     @SerializedName("measure")
+    private final
     String measure;
     @SerializedName("ingredient")
+    private final
     String ingredient;
 
     public Ingredient(float quantity, String measure, String ingredient) {

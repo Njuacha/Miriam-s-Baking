@@ -9,8 +9,8 @@ import com.example.android.miriamsbaking.database.AppDatabase;
 import com.example.android.miriamsbaking.view_model.IngredientViewModel;
 
 public class IngredientViewModelFactory extends ViewModelProvider.NewInstanceFactory{
-    private int recipeId;
-    private AppDatabase db;
+    private final int recipeId;
+    private final AppDatabase db;
 
     public IngredientViewModelFactory(int recipeId,AppDatabase db){
         this.recipeId = recipeId;

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.miriamsbaking.R;
-import com.example.android.miriamsbaking.database.StepWithId;
 import com.example.android.miriamsbaking.model.Step;
 
 import java.util.List;
@@ -19,9 +18,11 @@ import butterknife.ButterKnife;
 
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder>{
 
-    private Context mContext;
+    private final Context mContext;
     private List<Step> mSteps;
-    private StepListener mListener;
+    private final StepListener mListener;
+    private boolean tabletMode = false;
+    private int mFormerPostion = 0;
 
     public StepAdapter(Context context,StepListener listener){
         mContext = context;
@@ -58,6 +59,11 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
         notifyDataSetChanged();
     }
 
+    public void setTabletMode(boolean tabletMode) {
+        this.tabletMode = tabletMode;
+    }
+
+
     public interface StepListener{
         void onStepClicked(int stepIndex);
     }
@@ -66,7 +72,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
         @BindView(R.id.tv_step)
         TextView tv_step;
 
-        public StepViewHolder(View itemView) {
+        StepViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
@@ -74,6 +80,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
 
         @Override
         public void onClick(View v) {
+
             mListener.onStepClicked(mSteps.get(getAdapterPosition()).getId());
         }
     }

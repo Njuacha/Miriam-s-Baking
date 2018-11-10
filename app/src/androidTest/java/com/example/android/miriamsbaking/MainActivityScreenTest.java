@@ -24,7 +24,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class MainActivityScreenTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule =
+    public final ActivityTestRule<MainActivity> mActivityTestRule =
             new ActivityTestRule<>(MainActivity.class);
 
     private IdlingResource mIdlingResource;

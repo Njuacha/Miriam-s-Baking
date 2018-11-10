@@ -2,7 +2,6 @@ package com.example.android.miriamsbaking.database;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 
 import com.example.android.miriamsbaking.model.Step;
 

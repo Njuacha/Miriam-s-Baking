@@ -9,7 +9,7 @@ import com.example.android.miriamsbaking.model.Step;
 import java.util.List;
 
 public class StepViewModel extends ViewModel {
-    LiveData<List<Step>> steps;
+    final LiveData<List<Step>> steps;
 
     public StepViewModel(int recipeId, AppDatabase db){
         steps = db.stepDao().getStepsWithRecipeId(recipeId);

@@ -18,9 +18,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
-    private Context context;
+    private final Context context;
     private List<Recipe> recipes;
-    private RecipeClickListener listener;
+    private final RecipeClickListener listener;
 
 
     public RecipeAdapter(Context context, RecipeClickListener listener){
@@ -66,7 +66,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         @BindView(R.id.iv_option)
         ImageView ivOptions;
 
-        public RecipeViewHolder(View itemView) {
+        RecipeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);

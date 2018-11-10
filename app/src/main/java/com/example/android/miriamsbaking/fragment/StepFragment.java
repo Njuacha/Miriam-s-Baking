@@ -12,10 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.miriamsbaking.R;
 import com.example.android.miriamsbaking.model.Step;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -26,9 +28,9 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 
 import butterknife.BindView;
@@ -36,12 +38,14 @@ import butterknife.ButterKnife;
 
 public class StepFragment extends Fragment {
 
-    private static final String CONTENT_POSTION = "content postion";
+    private static final String PLAYER_POSITION = "player position" ;
+    private static final String PLAY_STATE = "play state";
     private int mStepIndex;
     private Parcelable[] mSteps;
     private StepFragListener stepFragListener;
     private SimpleExoPlayer mExoPlayer;
-    private long mContentPositon;
+    private long mPlayerPosition;
+    private boolean mPlayWhenReady;
 
     @BindView(R.id.btn_next)
     Button btnNext;
@@ -53,12 +57,12 @@ public class StepFragment extends Fragment {
     TextView tvDescript;
     @BindView(R.id.view_small_padding)
     View vwPadding;
-    @BindView(R.id.tv_no_vidoe_message)
-    TextView tvNoVideo;
+    @BindView(R.id.image_view)
+    ImageView imageView;
 
     private boolean isFullScreen = false;
 
-    public interface StepFragListener{
+    public interface StepFragListener {
         void onNextBtnClicked();
         void onPrevBtnClicked();
     }
@@ -68,9 +72,9 @@ public class StepFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        try{
+        try {
             stepFragListener = (StepFragListener) context;
-        }catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(e + " "
                     + context.toString() + " must implement StepFragListener");
         }
@@ -79,44 +83,60 @@ public class StepFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       View rootView = inflater.inflate(R.layout.step_fragment,container,false);
-        ButterKnife.bind(this,rootView);
+        View rootView = inflater.inflate(R.layout.step_fragment, container, false);
+        ButterKnife.bind(this, rootView);
 
-       if (mSteps != null){
+        if (mSteps != null) {
 
-           Step step = (Step)mSteps[mStepIndex];
-           String description = step.getDescription();
+            Step step = (Step) mSteps[mStepIndex];
+            String description = step.getDescription();
 
-           if(description != null){
-               TextView tvTextDescription = rootView.findViewById(R.id.tv_step_description);
-               tvTextDescription.setText(description);
-           }
+            if (description != null) {
+                TextView tvTextDescription = rootView.findViewById(R.id.tv_step_description);
+                tvTextDescription.setText(description);
+            }
 
-           if(savedInstanceState != null){
-               mContentPositon = savedInstanceState.getLong(CONTENT_POSTION);
-           }else{
-               mContentPositon = 0;
-           }
+            String videoUrl = step.getVideoURL();
+            // If there is videoUrl use it else try the thumbnailUrl.
+            if ((videoUrl != null) && !videoUrl.isEmpty()) {
 
-           String videoUrl = ((Step)mSteps[mStepIndex]).getVideoURL();
-           if(!(videoUrl.isEmpty()|| videoUrl == null)){
-               if(isFullScreen){
-                   makeVideoFullScreen();
-               }
-               setUpVideo(Uri.parse(videoUrl));
-           }else{
-               makePlayerViewInvisible();
-           }
+                if (isFullScreen) {
+                    makeVideoFullScreen();
+                }
+                // Restore values from any previous state
+                if (savedInstanceState != null){
+                    
+                    mPlayerPosition = savedInstanceState.getLong(PLAYER_POSITION);
+                    mPlayWhenReady = savedInstanceState.getBoolean(PLAY_STATE);
+                }else{
 
-       }
+                    mPlayWhenReady = true;
+                    mPlayerPosition = 0;
+                }
+
+
+                setUpVideo(Uri.parse(videoUrl));
+
+            } else  {
+
+                toggleVisibilityToImageView();
+
+                if( !(step.getThumbnailURL().isEmpty()))
+                Picasso.with(getContext()).load(step.getThumbnailURL())
+                        .placeholder(R.mipmap.ic_launcher)
+                        .error(R.mipmap.ic_launcher)
+                        .into(imageView);
+
+            }
+
+        }
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,32 +156,45 @@ public class StepFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if(mExoPlayer != null){
-            mContentPositon = mExoPlayer.getCurrentPosition();
-            outState.putLong(CONTENT_POSTION,mContentPositon);
-        }
-
-
+        Log.d("Values","Position: "+mPlayerPosition +"playState " + mPlayWhenReady);
+        outState.putLong(PLAYER_POSITION,mPlayerPosition);
+        outState.putBoolean(PLAY_STATE, mPlayWhenReady);
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(mExoPlayer != null){
+    public void onPause() {
+        super.onPause();
+        if( mExoPlayer != null){
+            mPlayerPosition = mExoPlayer.getCurrentPosition();
+            mPlayWhenReady = mExoPlayer.getPlayWhenReady();
+        }
+        if (Util.SDK_INT <= 23){
             releasePlayer();
         }
-
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
 
-    private void makePlayerViewInvisible() {
+        if(Util.SDK_INT > 23){
+            releasePlayer();
+        }
+    }
+
+    private void toggleVisibilityToImageView() {
         mPlayerView.setVisibility(View.GONE);
-        tvNoVideo.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.VISIBLE);
     }
 
-    private void makeVideoFullScreen(){
+    private void makeVideoFullScreen() {
         btnPrevious.setVisibility(View.GONE);
         btnNext.setVisibility(View.GONE);
         vwPadding.setVisibility(View.GONE);
@@ -172,20 +205,22 @@ public class StepFragment extends Fragment {
      * Release ExoPlayer.
      */
     private void releasePlayer() {
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+        if (mExoPlayer != null){
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
     }
 
-    public void setStepIndex(int stepIndex){
+    public void setStepIndex(int stepIndex) {
         mStepIndex = stepIndex;
     }
 
-    public void setSteps(Parcelable[] steps){
+    public void setSteps(Parcelable[] steps) {
         mSteps = steps;
     }
 
-    public void setUpVideo(Uri videoUri){
+    public void setUpVideo(Uri videoUri) {
 
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
@@ -198,8 +233,13 @@ public class StepFragment extends Fragment {
             MediaSource mediaSource = new ExtractorMediaSource(videoUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.seekTo(mContentPositon);
-            mExoPlayer.setPlayWhenReady(true);
+
+            mExoPlayer.setPlayWhenReady(mPlayWhenReady);
+
+            if (mPlayerPosition > 0){
+                mExoPlayer.seekTo(mPlayerPosition);
+            }
+
         }
 
 
@@ -208,11 +248,6 @@ public class StepFragment extends Fragment {
     public void setFullScreen(boolean fullScreen) {
         isFullScreen = fullScreen;
     }
-
-
-
-
-
 
 
 }

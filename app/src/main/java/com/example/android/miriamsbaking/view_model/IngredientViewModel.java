@@ -9,7 +9,7 @@ import com.example.android.miriamsbaking.model.Ingredient;
 import java.util.List;
 
 public class IngredientViewModel extends ViewModel {
-    private LiveData<List<Ingredient>> ingredients;
+    private final LiveData<List<Ingredient>> ingredients;
 
     public IngredientViewModel(int recipeId, AppDatabase db){
         ingredients = db.ingredientDao().getIngredientWithRecipeId(recipeId);
