@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
@@ -65,7 +66,9 @@ public class RecipeActivity extends AppCompatActivity implements StepAdapter.Ste
         if (intent.hasExtra(RECIPE_EXTRA)) {
             // Initialize the step adapter since there recipe exist
             mStepAdapter = new StepAdapter(this,this);
+            mRvSteps.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
             mRvSteps.setAdapter(mStepAdapter);
+
 
             Recipe recipe = intent.getParcelableExtra(RECIPE_EXTRA);
             String name = recipe.getName();

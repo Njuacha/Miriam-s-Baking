@@ -49,11 +49,20 @@ public class StepFragment extends Fragment {
     Button btnPrevious;
     @BindView(R.id.simple_exo_player_view)
     SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.tv_step_description)
+    TextView tvDescript;
+    @BindView(R.id.view_small_padding)
+    View vwPadding;
+    @BindView(R.id.tv_no_vidoe_message)
+    TextView tvNoVideo;
+
+    private boolean isFullScreen = false;
 
     public interface StepFragListener{
         void onNextBtnClicked();
         void onPrevBtnClicked();
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -99,8 +108,12 @@ public class StepFragment extends Fragment {
 
            String videoUrl = ((Step)mSteps[mStepIndex]).getVideoURL();
            if(!(videoUrl.isEmpty()|| videoUrl == null)){
-               Log.d("videoUrl",videoUrl);
+               if(isFullScreen){
+                   makeVideoFullScreen();
+               }
                setUpVideo(Uri.parse(videoUrl));
+           }else{
+               makePlayerViewInvisible();
            }
 
        }
@@ -142,6 +155,28 @@ public class StepFragment extends Fragment {
 
     }
 
+
+    private void makePlayerViewInvisible() {
+        mPlayerView.setVisibility(View.GONE);
+        tvNoVideo.setVisibility(View.VISIBLE);
+    }
+
+    private void makeVideoFullScreen(){
+        btnPrevious.setVisibility(View.GONE);
+        btnNext.setVisibility(View.GONE);
+        vwPadding.setVisibility(View.GONE);
+        tvDescript.setVisibility(View.GONE);
+    }
+
+    /**
+     * Release ExoPlayer.
+     */
+    private void releasePlayer() {
+        mExoPlayer.stop();
+        mExoPlayer.release();
+        mExoPlayer = null;
+    }
+
     public void setStepIndex(int stepIndex){
         mStepIndex = stepIndex;
     }
@@ -170,14 +205,13 @@ public class StepFragment extends Fragment {
 
     }
 
-    /**
-     * Release ExoPlayer.
-     */
-    private void releasePlayer() {
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+    public void setFullScreen(boolean fullScreen) {
+        isFullScreen = fullScreen;
     }
+
+
+
+
 
 
 

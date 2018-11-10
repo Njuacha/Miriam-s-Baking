@@ -8,5 +8,3 @@
     <include layout="@layout/recipe"/>
 
 </android.support.design.widget.CoordinatorLayout>
-
-

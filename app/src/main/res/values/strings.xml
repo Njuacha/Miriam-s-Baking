@@ -6,4 +6,11 @@
     <integer name="default_favorite_id">0</integer>
     <string name="favorite_key">favorite</string>
     <string name="default_recipe_name">Recipe Name</string>
+    <string name="no_availabe_short_descriptn">No available Short Description</string>
+    <string name="no_video_available">No video available</string>
+    <string name="ingredients_header">Ingredients</string>
+    <string name="steps_header">Steps</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="options">Options</string>
 </resources>

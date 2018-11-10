@@ -42,8 +42,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
         if ( shrtDesciptn != null){
             holder.tv_step.setText(shrtDesciptn);
         }else{
-            // TODO : make sure you remove this hardcorder string
-            holder.tv_step.setText("No available Short Description");
+            holder.tv_step.setText(R.string.no_availabe_short_descriptn);
         }
 
     }
